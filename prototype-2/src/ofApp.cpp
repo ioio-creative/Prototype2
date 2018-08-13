@@ -21,8 +21,6 @@ void ofApp::setup(){
     vidGrabber.initGrabber(camWidth, camHeight);
     
     ofSetVerticalSync(true);
-    
-    
     record = false;
     
 
