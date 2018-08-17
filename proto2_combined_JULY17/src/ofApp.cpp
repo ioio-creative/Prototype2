@@ -19,12 +19,13 @@ void ofApp::setup(){
     
     
     //setup button to camera ID
-    int camID = -1;
+    //int camID = -1;
     for(int i = 0; i < totalBtn; i++){
-        if(i % btnPerCam == 0){
-            camID ++;
-        }
-        btnToCam[i] = camID;
+    //    if(i % btnPerCam == 0){
+    //      camID ++;
+    // }
+        //btnToCam[i] = camID;
+        cout << "Button "<< i+1 << "is going to Camera No." <<btnToCam[i] << endl ;
         
     }
     
@@ -61,10 +62,19 @@ void ofApp::update(){
 //        else if ( myByte == OF_SERIAL_ERROR )
 //            printf("an error occurred");
 //        else
-//            printf("myByte is %d \n", myByte);
-        if(myByte <= 14) {
-            flrBtnPressed(0);
+            printf("myByte is %d \n", myByte);
+      
+        if(myByte <= 36) {
+            int TempBtnID = (myByte+1)/2 ;
+           // int TempBtnID = (myByte);
+            printf("TempBtn is %d \n", TempBtnID);
+          //  flrBtnPressed(0);
+          //  flrBtnPressed(myByte);
+            flrBtnPressed(TempBtnID);
             //supposedly you should call flrBtnPressed(btnID)
+            
+            //int TempBtnID =
+            //flnBtnPressed(
         }
     }
 }
@@ -75,9 +85,10 @@ void ofApp::draw(){
 //        cropPhoto.draw(10,10);
 //    }
     if(optPhoto.isAllocated()){
-        optPhoto.draw(10 ,10,500,900);
+        optPhoto.draw(10 ,10,500,880);
         
     }
+    
 }
 
 // TriggerEvent
@@ -90,18 +101,21 @@ void ofApp::flrBtnPressed(int btnID){
     int camID = btnToCam[btnID];
     cameras[camID].update();
     ofLog() << camID;
+    cout << "Current pressed Btn: "<< btnID << "- is going to Camera No." <<camID << endl ;
     rawPhoto.setFromPixels(cameras[camID].getPixels());
     
     //first crop
     int cropStartX = btnToStartPoint[btnID];
     int cropStartY = 0;
     //rawPhoto.crop(cropStartX,cropStartY,cropW,cropH);
-    cropPhoto.cropFrom(rawPhoto,cropStartX,cropStartY,cropW,cropH);
+    //cropPhoto.cropFrom(rawPhoto,cropStartX,cropStartY,cropW,cropH);
+    cropPhoto.cropFrom(rawPhoto,0,0,cropW,cropH);
+    
     //cropPhoto
     //suppose at the end of here I plug the cropPhoto into the openPos function
     //openPose(cropPhoto);
     //1. save to a particular location
-    string path = "/Users/chunhoiwong_ioio/Documents/OpenFramework X/of_v0.10.0_osx_release/apps/myApps/P02 oF project/prototype-2/bin/data/nodeGetImage/public/";
+    string path = "/Users/chunhoiwong_ioio/Documents/OpenFramework X/of_v0.10.0_osx_release/apps/myApps/Prototype2/prototype-2/bin/data/nodeGetImage/public/";
     
     if(flag<18){
         cropPhoto.save(path+ofToString(flag)+".jpg");
@@ -172,8 +186,7 @@ void ofApp::getHumanFromOSC(){
             //crop optimal photo for display
             if(center != 0){
                 optPhoto.cropFrom(cropPhoto,leftBorder,0,rightBorder - leftBorder, cropPhoto.getHeight());
-                optPhoto.save(ofToString(ofGetElap
-                                         sedTimef())+".jpg");
+                optPhoto.save(ofToString(ofGetElapsedTimef())+".jpg");
             }else{
                 ofLog() << "Can't Find Center";
             }

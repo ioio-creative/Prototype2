@@ -5,11 +5,16 @@
 #include "ofxJSON.h"
 
 //==============================
-#define totalCamera 4
+#define totalCamera 5
 #define totalBtn 18
+#define camDeviceA 0
+#define camDeviceB 1
+#define camDeviceC 4
+#define camDeviceD 2
+
 #define camW 1920
 #define camH 1080
-#define btnPerCam 7
+#define btnPerCam 6
 
 #define cropW 1920
 #define cropH 880
@@ -55,8 +60,9 @@ class ofApp : public ofBaseApp{
         ofVideoGrabber cameras[totalCamera];
         
         //buttons to Cam array [buttonID] i.e.{0,0,0,1,1,1,2,2,2}
-        //btnToCam[] = {0,0,0,0,0,0,1,1,1,1,1,1,2,2,2,2,2,2};
-        int btnToCam[totalBtn];
+        int btnToCam[totalBtn] = {4,4,4,4,4,0,0,0,0,1,1,1,1,1,2,2,2,2};
+    //int btnToCam2[36]={camDeviceD,camDeviceA,camDeviceA,camDeviceA,camDeviceA,camDeviceA,camDeviceA,camDeviceA,camDeviceA,camDeviceB,camDeviceB,camDeviceB,camDeviceB,camDeviceB,camDeviceB,camDeviceB,camDeviceB,camDeviceC,camDeviceC,camDeviceC,camDeviceC,camDeviceC,camDeviceC,camDeviceC,camDeviceC,camDeviceD,camDeviceD,camDeviceD,camDeviceD,camDeviceD,camDeviceD,camDeviceD};
+        //int btnToCam[totalBtn] ;
         
         //Dimension array [buttonID] = {startPoint0, StartPoint1,...,startPoint17}
         //btnToStartPoint[] = {0,320,640,960,1280,1600,0,320,640,960,1280,1600,0,320,640,960,1280,1600}
