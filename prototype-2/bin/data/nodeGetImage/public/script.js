@@ -201,7 +201,19 @@ function draw() {
       console.log("got human");
       console.log(humans);
       sendOsc('/ske',humans);
+      
+      //========================================
+      // convert the human Array into string
+      
+      console.log("TO STRING");
+      var myJSON = JSON.stringify(humans)
+      console.log(myJSON);
+      sendOsc('/sket',myJSON);
+      //========================================
+
       updateFlag = false;
+
+      
       }
     
     }
@@ -251,7 +263,6 @@ function keyReleased() {
   img = loadImage(s, sendImgToRunway);
   img.loadPixels();
   updatePixels();
-
   return false; // prevent any default behavior
   */
 }

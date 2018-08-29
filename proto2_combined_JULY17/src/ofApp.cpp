@@ -2,6 +2,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    ofSetBackgroundColor(0);
     
     //setupCamera
     vector<ofVideoDevice> devices = cameras[0].listDevices();
@@ -48,6 +49,28 @@ void ofApp::setup(){
     vector<ofSerialDeviceInfo> deviceList = serial.getDeviceList();
     serial.setup( 0 , baud );
 
+    
+    // Skeleton Tracking part
+    connections = {
+        {"Nose", "Left_Eye"},
+        {"Left_Eye", "Left_Ear"},
+        {"Nose", "Right_Eye"},
+        {"Right_Eye", "Right_Ear"},
+        {"Nose", "Neck"},
+        {"Neck", "Right_Shoulder"},
+        {"Neck", "Left_Shoulder"},
+        {"Right_Shoulder", "Right_Elbow"},
+        {"Right_Elbow", "Right_Wrist"},
+        {"Left_Shoulder", "Left_Elbow"},
+        {"Left_Elbow", "Left_Wrist"},
+        {"Neck", "Right_Hip"},
+        {"Right_Hip", "Right_Knee"},
+        {"Right_Knee", "Right_Ankle"},
+        {"Neck", "Left_Hip"},
+        {"Left_Hip", "Left_Knee"},
+        {"Left_Knee", "Left_Ankle"}
+    };
+
 }
 
 //--------------------------------------------------------------
@@ -88,6 +111,8 @@ void ofApp::draw(){
         optPhoto.draw(10 ,10,500,880);
         
     }
+    drawParts();
+    drawConnectionsOF();
     
 }
 
@@ -148,6 +173,14 @@ void ofApp::getHumanFromOSC(){
         ofxOscMessage m;
         receiver.getNextMessage(m);
         
+        //probably  insert the EXPORT JSON part here
+        //============================================================
+        
+        
+        
+        //============================================================
+
+       
         // check message from nodeGetImage
         if(m.getAddress() == "/ske"){
             // both the arguments are int32's
@@ -170,6 +203,12 @@ void ofApp::getHumanFromOSC(){
                     rightX = m.getArgAsFloat(i+1);
                 }
                 
+                //print every argument's x coordinate
+                ofLog()<< m.getArgAsString(i) <<" 's X cordinate in Float" ;
+                ofLog()<< m.getArgAsFloat(i+1);
+                
+
+    
             }
             if(leftX != 0 && rightX !=0){
                 center = (leftX + rightX)/2;
@@ -213,28 +252,91 @@ void ofApp::getHumanFromOSC(){
                     msg_string += "unknown";
                 }
             }
-
+           
         }
-        
-        
-        
-        /*
+     if(m.getAddress() == "/sket"){
          // get the next OSC message
-         ofxOscMessage m;
-         receiver.getNextMessage(m);
+         //ofxOscMessage m;
+         //receiver.getNextMessage(m);
+         
          //        grab the data
          string data = m.getArgAsString(0);
+         
          //        parse it to JSON
          results.parse(data);
-         //        grab the humans
-         humans = results["results"]["humans"];
          
-         */
+         //        grab the first human detected in the Array
+         humans = results[0];
+         ofLog() << "humans JSON size: " <<humans.size() ;
+         ofLog() << "Has OSC Msg for one Human : "<< humans;
+         results.save("result_output_pretty.json", true);
+         humans.save("SINGLEhumans_output_pretty.json",true);
+         
         
-    }
+         
+     }
+        
+        
+}
+    
+    
+    
+    
     
 }
+
+
+
+// A function to draw humans body parts as circles
+
+void ofApp::drawParts(){
+    for(int h = 0; h < results.size(); h++) {
+        ofxJSONElement human = results[h];
+        // Now that we have one human, let's draw its body parts
+        for (int b = 0; b < human.size(); b++) {
+            ofxJSONElement body_part = human[b];
+            // Body parts are relative to width and weight of the input
+            float x = body_part[1].asFloat();
+            float y = body_part[2].asFloat();
+            ofDrawEllipse(x * camW, y * camH, 10, 10);
+        }
+    }
+}
+
+//------------------------------------------------- updated at 2018-08-29
+void ofApp::drawConnectionsOF(){
+    for(int h = 0; h < results.size(); h++) {
+        ofxJSONElement human = results[h];
+        // Now that we have a human, let's draw its body
+        // connections start by looping through all body
+        // connections and matching only the ones we need.
+        for(int c = 0; c < connections.size(); c++){
+            ofxJSONElement start;
+            ofxJSONElement end;
+            // Check if we have a pair in the current body parts
+            for(int b = 0; b < human.size(); b++) {
+                ofxJSONElement body_part = human[b];
+                string name = body_part[0].asString();
+                if (name == connections[c][0]){
+                    start = body_part;
+                } else if (name == connections[c][1]){
+                    end = body_part;
+                }
+            }
+            if (start.size() > 0 && end.size() > 0){
+                float x1 = start[1].asFloat() * camW;
+                float y1 = start[2].asFloat() * camH;
+                float x2 = end[1].asFloat() * camW;
+                float y2 = end[2].asFloat() * camH;
+                ofDrawLine(x1, y1, x2, y2);
+            }
+        }
+    }
+}
 //--------------------------------------------------------------
+
+
+
 void ofApp::keyPressed(int key){
     if(key == '0'){
         flrBtnPressed(0);

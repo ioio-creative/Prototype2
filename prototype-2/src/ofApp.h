@@ -54,7 +54,7 @@ public:
     
     void drawParts();
     void drawConnections();
-    
+    //void SaveJSONfile();
     void getHumanFromOSC();
     
     ofxOscReceiver receiver;
