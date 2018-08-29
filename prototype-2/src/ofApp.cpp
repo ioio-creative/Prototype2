@@ -110,6 +110,8 @@ void ofApp::getHumanFromOSC(){
         ofxOscMessage m;
         receiver.getNextMessage(m);
         
+
+        
         // check for mouse moved message
         if(m.getAddress() == "/mouse/position"){
             // both the arguments are int32's
@@ -155,22 +157,28 @@ void ofApp::getHumanFromOSC(){
             current_msg_string = (current_msg_string + 1) % NUM_MSG_STRINGS;
             // clear the next line
             msg_strings[current_msg_string] = "";
+            
+            
+            
+
+            
         }
         
         
         
         /*
          // get the next OSC message
-         ofxOscMessage m;
-         receiver.getNextMessage(m);
+         ofxOscMessage k;
+         receiver.getNextMessage(k);
          //        grab the data
-         string data = m.getArgAsString(0);
+         string data = k.getArgAsString(0);
          //        parse it to JSON
          results.parse(data);
          //        grab the humans
          humans = results["results"]["humans"];
-         
-         */
+         //        Save a JSON File
+         humans.save("example_output_pretty.json", true);
+        */
         
     }
     
@@ -269,6 +277,9 @@ void ofApp::drawParts(){
             ofDrawEllipse(x * width, y * height, 10, 10);
         }
     }
+    //humans.save("example_output_human_pretty.json",true);
+    
+    //
 }
 
 // A function to draw connection between body parts

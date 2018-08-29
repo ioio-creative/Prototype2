@@ -60,7 +60,8 @@ class ofApp : public ofBaseApp{
         ofVideoGrabber cameras[totalCamera];
         
         //buttons to Cam array [buttonID] i.e.{0,0,0,1,1,1,2,2,2}
-        int btnToCam[totalBtn] = {4,4,4,4,4,0,0,0,0,1,1,1,1,1,2,2,2,2};
+        //int btnToCam[totalBtn] = {4,4,4,4,4,0,0,0,0,1,1,1,1,1,2,2,2,2};
+    int btnToCam[totalBtn] = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     //int btnToCam2[36]={camDeviceD,camDeviceA,camDeviceA,camDeviceA,camDeviceA,camDeviceA,camDeviceA,camDeviceA,camDeviceA,camDeviceB,camDeviceB,camDeviceB,camDeviceB,camDeviceB,camDeviceB,camDeviceB,camDeviceB,camDeviceC,camDeviceC,camDeviceC,camDeviceC,camDeviceC,camDeviceC,camDeviceC,camDeviceC,camDeviceD,camDeviceD,camDeviceD,camDeviceD,camDeviceD,camDeviceD,camDeviceD};
         //int btnToCam[totalBtn] ;
         
@@ -82,6 +83,8 @@ class ofApp : public ofBaseApp{
     
         //OSC reveice and final crop pro8l
         void getHumanFromOSC();
+        void drawParts();
+        void drawConnectionsOF();
         
         ofxOscReceiver receiver;
         
