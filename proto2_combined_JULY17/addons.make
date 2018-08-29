@@ -1,2 +1,3 @@
 ofxJSON
+ofxNetwork
 ofxOsc
